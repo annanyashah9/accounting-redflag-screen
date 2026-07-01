@@ -27,7 +27,11 @@ from config import (
 # data/ lives at the repo root (one level up from this src/ file).
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 COMPANYFACTS_DIR = DATA_DIR / "companyfacts"
+SUBMISSIONS_DIR = DATA_DIR / "submissions"
 TICKERS_CACHE = DATA_DIR / "company_tickers.json"
+
+SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik10}.json"
+SUBMISSIONS_FILE_URL = "https://data.sec.gov/submissions/{name}"
 
 _MIN_INTERVAL = 1.0 / SEC_MAX_REQUESTS_PER_SECOND
 _last_request_time = 0.0
@@ -100,5 +104,50 @@ def get_companyfacts(cik: int | str, force_refresh: bool = False) -> dict | None
         raise
 
     data = resp.json()
+    cache_path.write_text(json.dumps(data))
+    return data
+
+
+def get_submissions(cik: int | str, force_refresh: bool = False) -> dict | None:
+    """Fetch (and cache) the EDGAR submissions JSON for one CIK.
+
+    The submissions API gives the full filing history -- form type, filing date,
+    acceptance datetime, accession number, and period of report -- which Phase 2 uses to
+    (a) enrich filing-date stamps with intra-day acceptance times and the authoritative
+    form (10-K / 10-K/A / 20-F), and (b) detect amendments. Returns None on 404.
+
+    Prolific filers paginate older filings into separate files referenced under
+    filings.files (the `recent` block holds only ~1000 filings, which for e.g. Microsoft
+    does not reach back to the 2015 10-K). We fetch those extra files and MERGE them into
+    filings.recent so the cached structure is complete, then cache the merged result.
+    """
+    cik10 = _ten_digit_cik(cik)
+    cache_path = SUBMISSIONS_DIR / f"CIK{cik10}.json"
+
+    if cache_path.exists() and not force_refresh:
+        return json.loads(cache_path.read_text())
+
+    SUBMISSIONS_DIR.mkdir(parents=True, exist_ok=True)
+    url = SUBMISSIONS_URL.format(cik10=cik10)
+    try:
+        resp = _rate_limited_get(url)
+    except requests.HTTPError as exc:
+        if exc.response is not None and exc.response.status_code == 404:
+            return None
+        raise
+
+    data = resp.json()
+    recent = data.get("filings", {}).get("recent", {})
+    for fmeta in data.get("filings", {}).get("files", []):
+        name = fmeta.get("name")
+        if not name:
+            continue
+        extra = _rate_limited_get(SUBMISSIONS_FILE_URL.format(name=name)).json()
+        for key, arr in extra.items():
+            if isinstance(arr, list) and key in recent and isinstance(recent[key], list):
+                recent[key].extend(arr)
+    if "filings" in data:
+        data["filings"]["files"] = []  # merged into recent
+
     cache_path.write_text(json.dumps(data))
     return data

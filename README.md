@@ -1,0 +1,74 @@
+# Accounting Red-Flag Screen
+
+A systematic, point-in-time-disciplined screen for accounting red flags across a fixed
+universe of companies, built on SEC EDGAR structured (XBRL) data. It is a **defensible
+red-flag SCREEN with honest evaluation — not a return or earnings-miss predictor.**
+
+- **Phase 1 — scoring engine.** Piotroski F-Score and Beneish M-Score from EDGAR
+  companyfacts, with disciplined XBRL tag-mapping (missing inputs are flagged, never
+  substituted). See `src/config.py`, `src/edgar.py`, `src/extract.py`, `src/scores.py`.
+- **Phase 2 — point-in-time date discipline** (this note).
+
+## Phase 2: point-in-time discipline and the lookahead problem
+
+### The problem — lookahead bias
+A score computed from a fiscal year's financials was **not knowable on the last day of that
+fiscal year.** The 10-K that reports those numbers is filed weeks to months later (here, a
+median of ~50 days after period-end). Any screen that stamps a score with the
+**fiscal-period-end date** silently claims knowledge nobody had yet — classic lookahead bias,
+which inflates apparent performance and is the single most common way a backtest lies.
+
+### The fix — filing-date stamping + the latest-input rule
+Every score is stamped with an **`available_as_of`** date: the date its underlying data would
+actually have been public.
+- **Source.** The companyfacts `filed` date carried per-fact through Phase 1 (the
+  originally-reported filing date, since Phase 1 selects the earliest-filed, fiscal-year-
+  matched value), enriched via the EDGAR **submissions API** with the intra-day acceptance
+  timestamp (`knowable_next_day` flags filings accepted after the US market close), the
+  authoritative form type, and amendment history.
+- **Latest-input rule.** A score for fiscal year *Y* consumes data from years *Y*, *Y-1*, and
+  *Y-2* (the indices need prior years). It cannot be computed until the **last** of those is
+  filed, so `available_as_of = max(filing_date)` over the consumed years — which is year *Y*'s
+  annual-report filing date.
+
+`pit.point_in_time_view(df, as_of_date)` then returns the screen **as it would have looked on
+any past date** — only the scores a real analyst could have computed by then. For example, as
+of **2015-04-01**, only **84** of 306 computable score-rows were
+actually knowable; the rest would be lookahead. (Concretely: Hertz's FY2014 10-K was delayed
+by its accounting restatement until 2015-07-16, so Hertz FY2014 simply did not exist for a
+screen run in spring 2015 — even though the "all data now" view shows it.)
+
+### The limitation that remains — restatement contamination
+companyfacts returns each figure **as it exists now.** When a company restates a prior year,
+later filings carry revised values for that period. Phase 1 already uses the
+**originally-reported** value (earliest-filed), so the stamped score reflects what was known
+at the time. Phase 2 additionally **detects and discloses** contamination: for every
+(input × fiscal-year) it compares the originally-reported value against the most-recently
+reported value for the same period and flags divergences (`results/restatements.csv`;
+480 figures flagged in this run — e.g. Hertz's FY2012 total assets were reported at
+$23.29B, later revised to $23.13B).
+
+**What we cannot fix with free data, stated plainly:**
+- If companyfacts did **not retain** the original value (only the restated one survives), our
+  earliest-filed value is already contaminated and the divergence check cannot see it.
+- Value divergence cannot always distinguish a genuine restatement from a reclassification,
+  an XBRL tag change, or an entity spin-off recast (e.g. the CIK that held the 2014-era Hertz
+  was renamed Herc and later recast its historicals to the equipment-rental business only).
+- Share counts are excluded from divergence detection (they change for stock splits/issuance,
+  not restatements).
+- Acceptance-time → "knowable next day" uses a conservative UTC cutoff, not exact ET/DST.
+- This universe is all 10-K filers; the 20-F/40-F date path is implemented but untested here.
+
+We therefore do **not** claim the data is fully point-in-time clean — only that lookahead from
+filing lag is removed and that residual restatement contamination is surfaced, not hidden.
+
+## Outputs
+- `results/scores.csv` — Phase 1 scores.
+- `results/scores_pit.csv` — scores + `available_as_of`, form, accession, acceptance time,
+  `knowable_next_day`, `fiscal_period_end`, `n_restated_inputs`, `restated_inputs`.
+- `results/restatements.csv` — originally-reported vs latest value per (input × fiscal-year).
+- `results/pit_demo_2015-04-01.csv` — the as-of screen vs the naive "all data now" view.
+
+## Reproducing
+`python src/run_phase1.py` then `python src/run_phase2.py [AS_OF_DATE]`. All EDGAR responses
+are cached under `data/`, so runs are reproducible against a fixed snapshot.
