@@ -7,7 +7,8 @@ Run:  python src/run_phase4.py
 Reuses the OUTPUTS of the prior phases (their reusable artifacts):
   results/scores_pit.csv   (Phase 2)  -- accounting scores + available_as_of
   results/tone_signals.csv (Phase 3)  -- tone signals + YoY deltas + available_as_of
-Produces the combined screen, the drill-down, a figure, and the README evaluation section.
+Produces the combined screen, the drill-down, a figure, and results/EVALUATION.md (the
+auto-generated companion to the hand-written README evaluation).
 No signal is recomputed here.
 """
 from __future__ import annotations
@@ -23,8 +24,9 @@ from screen import build_screen
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = ROOT / "results"
 FIGURES_DIR = ROOT / "figures"
-README = ROOT / "README.md"
-PHASE4_MARKER = "## Phase 4: combined screen & honest evaluation"
+# The narrative evaluation lives in the hand-written README; this file is the auto-generated
+# companion with the current run's exact numbers.
+EVALUATION_MD = RESULTS_DIR / "EVALUATION.md"
 
 
 def _load_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -34,13 +36,6 @@ def _load_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
         sys.exit(f"Missing {missing}. Run: python src/run_phase2.py && "
                  f"python src/run_phase3.py first.")
     return pd.read_csv(sp), pd.read_csv(ts)
-
-
-def _write_readme(section: str) -> None:
-    existing = README.read_text() if README.exists() else ""
-    if PHASE4_MARKER in existing:            # idempotent
-        existing = existing[:existing.index(PHASE4_MARKER)].rstrip() + "\n"
-    README.write_text(existing.rstrip() + "\n" + section)
 
 
 def print_summary(screen: pd.DataFrame, surface: pd.DataFrame) -> None:
@@ -83,11 +78,11 @@ def main() -> None:
 
     surface = surface_check(screen)
     make_heatmap(screen, FIGURES_DIR / "screen_heatmap.png")
-    _write_readme(build_evaluation_markdown(screen, surface))
+    EVALUATION_MD.write_text(build_evaluation_markdown(screen, surface))
 
     print_summary(screen, surface)
     print("\nWrote: results/screen.csv, results/screen_flagged.csv, "
-          "figures/screen_heatmap.png, README.md")
+          "results/EVALUATION.md, figures/screen_heatmap.png")
 
 
 if __name__ == "__main__":

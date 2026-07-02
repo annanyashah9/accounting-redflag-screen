@@ -12,7 +12,7 @@ Pipeline (reuses Phases 1-2):
 
 The tone signal for fiscal year Y comes from the SAME 10-K (accession) as year Y's
 accounting data, so it shares an identical available_as_of -- no new lookahead. Outputs land
-in results/; a README note is appended. No combined screen / evaluation (that is Phase 4).
+in results/. No combined screen / evaluation (that is Phase 4).
 """
 from __future__ import annotations
 
@@ -35,9 +35,7 @@ from run_phase1 import collect_long_facts
 from tone import add_yoy_deltas, build_tone_panel
 
 RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
-README = Path(__file__).resolve().parent.parent / "README.md"
 ANNUAL_FORMS = {"10-K", "10-K/A", "20-F", "20-F/A"}
-PHASE3_MARKER = "## Phase 3: management-tone signal"
 
 
 def _company_by_cik() -> dict[int, dict]:
@@ -121,50 +119,6 @@ def print_summary(tone: pd.DataFrame, categories) -> pd.DataFrame:
     return examples[cols] if not examples.empty else pd.DataFrame(columns=cols)
 
 
-def write_readme_note(tone: pd.DataFrame) -> None:
-    found = int(tone["mdna_found"].sum())
-    shifts = int(tone["tone_shift"].sum())
-    note = f"""
-{PHASE3_MARKER}
-
-Phase 3 adds a **management-tone** signal from the 10-K's MD&A (Item 7), stamped with the
-SAME point-in-time discipline as the accounting scores. The tone signal for fiscal year Y is
-extracted from the very 10-K that reports year Y's financials, so it shares that filing's
-`available_as_of` date exactly — no new lookahead.
-
-### Why a finance lexicon (not general sentiment)
-Signals use the **Loughran-McDonald** dictionary, built from 10-Ks, *not* a general-purpose
-sentiment model. General models misclassify neutral financial vocabulary — "liability",
-"cost", "risk", "capital", "tax" — as negative and produce noise on filings. LM assigns
-finance-aware categories (Negative, Positive, Uncertainty, Litigious, Strong/Weak Modal).
-
-### Signals (length-normalized proportions of MD&A tokens)
-`lm_negative/positive/uncertainty/litigious/weak_modal/strong_modal`, `hedging`
-(= uncertainty + weak-modal), `net_tone` (= positive − negative), and `fls_freq`
-(forward-looking-cue frequency, a transparent documented heuristic — not a validated
-classifier). **The screen inputs are the year-over-year DELTAS** (`d_*`), because a
-within-company *change* in tone is far more defensible than a cross-company level comparison
-(disclosure styles differ). `tone_shift` flags a marked YoY rise in hedging or drop in
-forward-looking frequency (illustrative thresholds, not predictive-tuned).
-
-### Point-in-time and limits
-MD&A section extraction is a heuristic (Item 7 → Item 7A/Item 8, longest span). When it fails
-the signal is left blank and flagged `mdna_found=False`, never fabricated. In this run MD&A
-was extracted for {found} company-years and {shifts} showed a notable YoY tone shift. An
-optional LLM nuance pass (`--llm`, off by default) can augment the lexicon signals but never
-replaces them — the lexicon core is the transparent, reproducible screen.
-
-### Outputs
-- `results/tone_signals.csv` — tone signals + YoY deltas + `available_as_of`, merge-ready
-  with `results/scores_pit.csv` on (cik, fiscal_year).
-- `results/tone_examples.csv` — drill-down of notable YoY tone shifts.
-"""
-    existing = README.read_text() if README.exists() else ""
-    if PHASE3_MARKER in existing:            # idempotent: replace any prior Phase 3 note
-        existing = existing[:existing.index(PHASE3_MARKER)].rstrip() + "\n"
-    README.write_text(existing.rstrip() + "\n" + note)
-
-
 def main(since: int | None = None, use_llm: bool = False) -> None:
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -196,8 +150,7 @@ def main(since: int | None = None, use_llm: bool = False) -> None:
     tone.to_csv(RESULTS_DIR / "tone_signals.csv", index=False)
     examples = print_summary(tone, categories)
     examples.to_csv(RESULTS_DIR / "tone_examples.csv", index=False)
-    write_readme_note(tone)
-    print("\nWrote: results/tone_signals.csv, results/tone_examples.csv, README.md")
+    print("\nWrote: results/tone_signals.csv, results/tone_examples.csv")
 
 
 def _run_llm_pass(tone: pd.DataFrame, records: list[dict]) -> None:
