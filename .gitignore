@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 CLAUDE.md
 .DS_Store
+
+# Phase 3: cached raw 10-K HTML is large (~1.5GB) and re-fetchable from EDGAR.
+# The reproducible artifact is results/tone_signals.csv, not the raw filings.
+data/filings/

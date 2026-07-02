@@ -250,4 +250,57 @@ SCOPE_NOTES = {
         "'manipulation-like' financial profile, not fraud. Era-specific coefficients; "
         "ASC 606 revenue and depreciation tagging add noise."
     ),
+    "tone": (
+        "Management-tone signals use the Loughran-McDonald finance lexicon, NOT a general "
+        "sentiment model -- general models misread neutral financial vocabulary "
+        "('liability', 'cost', 'risk', 'capital') as negative. Signals are length-"
+        "normalized; the defensible unit is the WITHIN-company year-over-year CHANGE, not "
+        "cross-company levels (disclosure styles differ). This is a red-flag input stamped "
+        "with when it was knowable -- not a predictive claim."
+    ),
 }
+
+# ---------------------------------------------------------------------------
+# Phase 3: management-tone NLP configuration.
+# ---------------------------------------------------------------------------
+# Loughran-McDonald Master Dictionary (2024, 1993-2025). The Notre Dame SRAF page serves
+# the CSV via Dropbox (not scriptable), so we pull a raw-CSV mirror and cache it. The
+# dictionary is free for academic use (Loughran & McDonald, J. Finance, 2011).
+LM_DICT_URL = ("https://raw.githubusercontent.com/james-pavlicek/"
+               "algorithmic-trading-with-artificial-intelligence/main/"
+               "Loughran-McDonald_MasterDictionary.csv")
+
+# LM category columns we use (a nonzero cell = the year the word entered that category).
+LM_CATEGORIES = ["Negative", "Positive", "Uncertainty", "Litigious",
+                 "Strong_Modal", "Weak_Modal"]
+
+# Forward-looking-statement cue terms. FLS has no LM category, so this is a transparent,
+# documented heuristic list (drawn from the FLS literature, e.g. Bozanic et al. 2018,
+# Muslu et al. 2015) -- NOT a validated classifier. Single tokens are matched against
+# tokens; multi-word phrases are matched as substrings of the normalized text.
+FLS_CUES = {
+    # intent / expectation verbs
+    "expect", "expects", "expected", "anticipate", "anticipates", "anticipated",
+    "believe", "believes", "intend", "intends", "plan", "plans", "planned",
+    "estimate", "estimates", "estimated", "forecast", "forecasts", "project",
+    "projects", "projected", "assume", "assumes", "seek", "seeks", "target",
+    "targets", "aim", "aims", "goal", "objective", "outlook", "guidance",
+    # future modality / temporality
+    "will", "shall", "would", "future", "upcoming", "forthcoming", "prospects",
+    "coming", "next", "continue", "continues", "remain", "likely",
+}
+# Multi-word forward-looking phrases (matched as substrings on normalized lowercase text).
+FLS_PHRASES = [
+    "going forward", "in the future", "over the next", "in the coming",
+    "we expect", "we anticipate", "we believe", "we intend", "we plan",
+    "continue to", "expected to", "we will", "in the years",
+]
+
+# Tone-shift flags: ILLUSTRATIVE, descriptive thresholds on the YoY relative change of a
+# signal -- deliberately NOT optimized to predict anything.
+TONE_HEDGING_RISE_PCT = 0.25   # hedging up >25% vs prior year
+TONE_FLS_DROP_PCT = 0.25       # forward-looking frequency down >25% vs prior year
+
+# MD&A extraction: reject a span shorter than this many words as a failed extraction
+# (real MD&A sections run to thousands of words; short hits are TOC entries / stubs).
+MDNA_MIN_WORDS = 400
