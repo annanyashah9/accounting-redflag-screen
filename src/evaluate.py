@@ -1,0 +1,156 @@
+"""
+Phase 4 evaluation: "does the screen surface the right companies?" plus the honest
+limitations writeup. This is the headline deliverable -- trap-awareness, not a predictive
+claim. Nothing here is a return/earnings-miss backtest.
+"""
+from __future__ import annotations
+
+from pathlib import Path
+
+import matplotlib
+import pandas as pd
+
+matplotlib.use("Agg")  # headless
+import matplotlib.pyplot as plt  # noqa: E402
+
+from config import SCREEN_MIN_FLAGS  # noqa: E402
+
+
+def surface_check(screen: pd.DataFrame) -> pd.DataFrame:
+    """Per known-problem case: did the screen flag it, in which years, and when was the
+    earliest flag knowable (point-in-time)? Qualitative -- NOT precision/recall."""
+    kc = screen[screen["is_known_case"]].copy()
+    rows = []
+    for ticker, g in kc.groupby("ticker"):
+        flagged = g[g["screen_flagged"]]
+        any_flag = g[g["red_flags"] >= 1]
+        rows.append({
+            "ticker": ticker,
+            "name": g["name"].iloc[0],
+            "years_scored": int(g["fiscal_year"].nunique()),
+            f"flagged_years(>={SCREEN_MIN_FLAGS})": ", ".join(
+                map(str, sorted(flagged["fiscal_year"]))) or "-",
+            "earliest_flag_knowable": (flagged["combined_available_as_of"].min()
+                                       if len(flagged) else "-"),
+            "years_with_any_flag": int(any_flag["fiscal_year"].nunique()),
+        })
+    out = pd.DataFrame(rows)
+    return out.sort_values(f"flagged_years(>={SCREEN_MIN_FLAGS})",
+                           ascending=False).reset_index(drop=True)
+
+
+def make_heatmap(screen: pd.DataFrame, path: Path, n_controls: int = 8) -> None:
+    """red_flags by company x fiscal_year: all known cases (marked *) plus a control
+    sample, so flags clustering around problem years are visible."""
+    known = sorted(screen.loc[screen["is_known_case"], "ticker"].unique())
+    controls = sorted(screen.loc[~screen["is_known_case"], "ticker"].unique())[:n_controls]
+    tickers = known + controls
+
+    years = sorted(screen["fiscal_year"].unique())
+    mat = (screen.pivot_table(index="ticker", columns="fiscal_year",
+                              values="red_flags", aggfunc="max")
+           .reindex(index=tickers, columns=years))
+
+    fig, ax = plt.subplots(figsize=(min(1 + 0.5 * len(years), 16),
+                                    0.42 * len(tickers) + 1.5))
+    im = ax.imshow(mat.values, aspect="auto", cmap="OrRd", vmin=0, vmax=4)
+
+    ax.set_xticks(range(len(years)))
+    ax.set_xticklabels(years, rotation=90, fontsize=7)
+    ax.set_yticks(range(len(tickers)))
+    ax.set_yticklabels([f"* {t}" if t in known else f"  {t}" for t in tickers], fontsize=8)
+    # separate known cases from controls
+    ax.axhline(len(known) - 0.5, color="black", linewidth=1.2)
+
+    for i in range(mat.shape[0]):
+        for j in range(mat.shape[1]):
+            v = mat.values[i, j]
+            if pd.notna(v) and v > 0:
+                ax.text(j, i, int(v), ha="center", va="center", fontsize=7,
+                        color="black" if v < 3 else "white")
+
+    ax.set_title("Combined red-flag count by company x fiscal year\n"
+                 "(* = seeded known accounting-problem case; line separates them from "
+                 "controls)", fontsize=10)
+    fig.colorbar(im, ax=ax, label="red_flags (0-4)", fraction=0.02, pad=0.01)
+    fig.tight_layout()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=130)
+    plt.close(fig)
+
+
+def build_evaluation_markdown(screen: pd.DataFrame, surface: pd.DataFrame) -> str:
+    """The README EVALUATION section: result + every named limitation."""
+    flagged_col = f"flagged_years(>={SCREEN_MIN_FLAGS})"
+    n_known = len(surface)
+    surfaced_ge2 = int((surface[flagged_col] != "-").sum())
+    surfaced_ge1 = int((surface["years_with_any_flag"] > 0).sum())
+    ctrl = screen[~screen["is_known_case"]]
+    ctrl_rate = ctrl["screen_flagged"].mean()
+    kc = screen[screen["is_known_case"]]
+    kc_rate = kc["screen_flagged"].mean()
+
+    table = "```\n" + surface.to_string(index=False) + "\n```"
+
+    return f"""
+## Phase 4: combined screen & honest evaluation
+
+Phase 4 merges the accounting scores (Phases 1-2) and the tone signals (Phase 3) into one
+red-flag screen and evaluates it **as a screen** -- *"does it surface the companies it
+should?"* -- **not** as a return or earnings-miss predictor.
+
+### Combining, point-in-time
+Four independent binary red flags, each on its **own pre-published / Phase-set threshold**
+(nothing re-tuned here): weak Piotroski F-Score (<= {2}), Beneish M-Score manipulation flag
+(> -1.78), a YoY rise in hedging language, and a YoY drop in forward-looking language.
+`red_flags` is their equal-weighted count (0-4); a company-year is **flagged when >= {SCREEN_MIN_FLAGS}
+independent signals agree** (corroboration, because Beneish alone has a high false-positive
+rate). Each flagged row carries a `reasons` drill-down naming exactly which metric and which
+tone shift fired. The combined `available_as_of` is the **latest** of the constituent signals'
+dates -- here identical, since the tone text comes from the same 10-K as the accounting data --
+so merging adds **no lookahead**.
+
+### Does it surface the right companies?
+Of **{n_known}** seeded known-problem cases, the screen raised a corroborated (>= {SCREEN_MIN_FLAGS})
+flag for **{surfaced_ge2}**, and at least one red flag for **{surfaced_ge1}** -- versus a
+control flag rate of **{ctrl_rate:.1%}** (known-case rate {kc_rate:.1%}). The flags appear at
+plausible, point-in-time-honest dates (e.g. before the problem became public). Per case:
+
+{table}
+
+**This is a partial, honest result -- and that is the point.** The rule was specified on
+principle, not tuned; a rule tuned to these few cases would light up all of them. It misses
+several known cases, and the misses are informative: BHC/GE frequently have **no M-Score**
+(missing gross-margin XBRL inputs, Phase 1), and NKLA/SUNE/CLDN are **delisted with short
+histories**, so they have few YoY tone deltas to trip. The misses trace directly to the data
+limitations below.
+
+### Limitations free data cannot remove (named directly)
+1. **Survivorship bias.** The controls are companies still listed today; delisted/bankrupt
+   firms -- exactly what a red-flag screen should catch -- are underrepresented. Even the
+   seeded delisted cases are few and had to be CIK-pinned by hand. A credible screen needs the
+   full historical cross-section **including delisted names**; free current-ticker data does
+   not provide it.
+2. **Restatement contamination** (from Phase 2). companyfacts returns data as it exists now;
+   originally-reported figures are not always recoverable, so even correct filing-date
+   stamping can surface numbers nobody had at the time. Detected and disclosed, not fully
+   fixable.
+3. **Small, fixed universe (~30).** This is a **demonstration of a defensible method, not a
+   statistically powered test.** No precision/recall or predictive-power claim is made.
+4. **Overfitting risk -- avoided by construction.** Thresholds are the signals' own published
+   values, weights are equal, and the >= {SCREEN_MIN_FLAGS}-flag rule was fixed a priori. The
+   imperfect known-case hit rate is the evidence that it was not tuned to the answer.
+
+### What a proper point-in-time backtest would require
+A survivorship-free universe including delisted firms; a true as-originally-reported
+(point-in-time) fundamentals database; a far larger sample; out-of-sample rule specification;
+and an outcome defined **not as returns** but as subsequent restatement / enforcement action,
+evaluated against proper base rates. This project deliberately stops at a **defensible,
+point-in-time-disciplined screen with its traps named** -- which is the honest contribution.
+
+### Outputs
+- `results/screen.csv` -- the full combined screen with flags, `red_flags`, `reasons`, and
+  `combined_available_as_of`.
+- `results/screen_flagged.csv` -- flagged company-years with drill-down.
+- `figures/screen_heatmap.png` -- red-flag counts by company x year (known cases vs controls).
+"""

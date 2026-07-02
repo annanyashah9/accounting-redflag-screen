@@ -232,6 +232,16 @@ PIOTROSKI_STRONG = 8
 PIOTROSKI_WEAK = 2
 
 # ---------------------------------------------------------------------------
+# Phase 4: combined-screen threshold.
+# A company-year is flagged when >= this many INDEPENDENT red flags fire (of: weak
+# F-Score, Beneish manipulation flag, YoY hedging rise, YoY forward-looking drop). This
+# is a PRINCIPLED corroboration requirement -- given Beneish's high false-positive rate, we
+# demand agreement across >=2 independent signals. It is NOT tuned to make the seeded known
+# cases light up; each underlying flag uses its own pre-published / Phase-set threshold.
+# ---------------------------------------------------------------------------
+SCREEN_MIN_FLAGS = 2
+
+# ---------------------------------------------------------------------------
 # Design-scope limitations -- stated honestly in output headers. These scores were
 # built for specific universes/eras; applying them broadly is out-of-design use.
 # ---------------------------------------------------------------------------
