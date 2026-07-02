@@ -336,6 +336,12 @@ cik,ticker,name,fiscal_year,logical_input,originally_reported,latest_reported,or
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2023,receivables,563000000,563000000,2024-02-13,2025-02-13,1,0.0,none,False
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2024,receivables,589000000,589000000,2025-02-13,2026-02-17,1,0.0,none,False
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2025,receivables,769000000,769000000,2026-02-17,2026-02-17,1,0.0,none,False
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2010,receivables,1356553000,1356553000,2011-02-25,2012-02-27,1,0.0,none,False
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2011,receivables,1616382000,1616382000,2012-02-27,2013-03-04,1,0.0,none,False
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2012,receivables,1886596000,1787000000,2013-03-04,2015-07-16,3,0.05279137663813556,restated,True
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2013,receivables,1512600000,1397000000,2014-03-19,2015-07-16,2,0.07642469919344176,restated,True
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2014,receivables,1597000000,1597000000,2015-07-16,2016-02-29,1,0.0,none,False
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2015,receivables,2074000000,2074000000,2016-02-29,2016-02-29,1,0.0,none,False
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2010,ppe_net,1163569000,1163569000,2011-02-25,2012-02-27,1,0.0,none,False
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2011,ppe_net,1251854000,1251854000,2012-02-27,2013-03-04,1,0.0,none,False
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),2012,ppe_net,1436386000,1259000000,2013-03-04,2015-07-16,3,0.12349465951352909,restated,True
@@ -456,6 +462,14 @@ cik,ticker,name,fiscal_year,logical_input,originally_reported,latest_reported,or
 1336917,UAA,Under Armour,2023,depreciation,135700000,133600000,2023-05-24,2025-05-22,2,0.015475313190862197,restated,True
 1336917,UAA,Under Armour,2024,depreciation,136600000,136600000,2024-05-29,2026-05-19,1,0.0,none,False
 1336917,UAA,Under Armour,2025,depreciation,134300000,134300000,2025-05-22,2026-05-19,1,0.0,none,False
+1336917,UAA,Under Armour,2010,depreciation,31321000,31321000,2011-02-24,2013-02-26,1,0.0,none,False
+1336917,UAA,Under Armour,2011,depreciation,36301000,36301000,2012-02-27,2014-02-21,1,0.0,none,False
+1336917,UAA,Under Armour,2012,depreciation,43082000,43082000,2013-02-25,2015-02-20,1,0.0,none,False
+1336917,UAA,Under Armour,2013,depreciation,50549000,50549000,2014-02-21,2016-02-22,1,0.0,none,False
+1336917,UAA,Under Armour,2014,depreciation,72093000,72093000,2015-02-20,2017-02-23,1,0.0,none,False
+1336917,UAA,Under Armour,2015,depreciation,100940000,100940000,2016-02-22,2018-02-28,1,0.0,none,False
+1336917,UAA,Under Armour,2016,depreciation,144770000,144770000,2017-02-23,2019-02-25,1,0.0,none,False
+1336917,UAA,Under Armour,2017,depreciation,173747000,173747000,2018-02-28,2020-02-26,1,0.0,none,False
 1336917,UAA,Under Armour,2010,cfo,50114000,50114000,2011-02-24,2013-02-26,1,0.0,none,False
 1336917,UAA,Under Armour,2011,cfo,15218000,15218000,2012-02-27,2014-02-21,1,0.0,none,False
 1336917,UAA,Under Armour,2012,cfo,199761000,199761000,2013-02-25,2015-02-20,1,0.0,none,False
@@ -1421,6 +1435,8 @@ cik,ticker,name,fiscal_year,logical_input,originally_reported,latest_reported,or
 945436,SUNE,SunEdison,2012,depreciation,200600000,200600000,2013-03-01,2015-03-02,1,0.0,none,False
 945436,SUNE,SunEdison,2013,depreciation,206200000,206200000,2014-03-06,2015-03-02,1,0.0,none,False
 945436,SUNE,SunEdison,2014,depreciation,262200000,262200000,2015-03-02,2015-03-02,1,0.0,none,False
+945436,SUNE,SunEdison,2009,depreciation,124000000,124000000,2010-03-01,2012-02-29,1,0.0,none,False
+945436,SUNE,SunEdison,2010,depreciation,164800000,164800000,2011-02-22,2013-03-01,1,0.0,none,False
 945436,SUNE,SunEdison,2009,cfo,33000000,33000000,2010-03-01,2012-02-29,1,0.0,none,False
 945436,SUNE,SunEdison,2010,cfo,347600000,347600000,2011-02-22,2013-03-01,1,0.0,none,False
 945436,SUNE,SunEdison,2011,cfo,-15300000,-15300000,2012-02-29,2014-03-06,1,0.0,none,False
@@ -2306,6 +2322,7 @@ cik,ticker,name,fiscal_year,logical_input,originally_reported,latest_reported,or
 80424,PG,Procter & Gamble,2023,depreciation,2714000000,2714000000,2023-08-04,2025-08-04,1,0.0,none,False
 80424,PG,Procter & Gamble,2024,depreciation,2896000000,2896000000,2024-08-05,2025-08-04,1,0.0,none,False
 80424,PG,Procter & Gamble,2025,depreciation,2847000000,2847000000,2025-08-04,2025-08-04,1,0.0,none,False
+80424,PG,Procter & Gamble,2010,depreciation,3108000000,3108000000,2010-08-13,2010-08-13,1,0.0,none,False
 80424,PG,Procter & Gamble,2010,cfo,16072000000,16131000000,2010-08-13,2012-08-08,2,0.003670980587356894,none,False
 80424,PG,Procter & Gamble,2011,cfo,13231000000,13330000000,2011-08-10,2013-08-08,2,0.007482427632076185,restated,True
 80424,PG,Procter & Gamble,2012,cfo,13284000000,13284000000,2012-08-08,2014-08-08,1,0.0,none,False
@@ -2988,6 +3005,9 @@ cik,ticker,name,fiscal_year,logical_input,originally_reported,latest_reported,or
 104169,WMT,Walmart,2024,depreciation,11853000000,11853000000,2024-03-15,2026-03-13,1,0.0,none,False
 104169,WMT,Walmart,2025,depreciation,12973000000,12973000000,2025-03-14,2026-03-13,1,0.0,none,False
 104169,WMT,Walmart,2026,depreciation,14203000000,14203000000,2026-03-13,2026-03-13,1,0.0,none,False
+104169,WMT,Walmart,2009,depreciation,7157000000,7157000000,2010-03-30,2012-03-27,1,0.0,none,False
+104169,WMT,Walmart,2010,depreciation,7641000000,7641000000,2011-03-30,2013-03-26,1,0.0,none,False
+104169,WMT,Walmart,2011,depreciation,8130000000,8106000000,2012-03-27,2014-03-21,2,0.002952029520295203,none,False
 104169,WMT,Walmart,2009,cfo,26249000000,26249000000,2010-03-30,2012-03-27,1,0.0,none,False
 104169,WMT,Walmart,2010,cfo,23643000000,23643000000,2011-03-30,2013-03-26,1,0.0,none,False
 104169,WMT,Walmart,2011,cfo,24255000000,24255000000,2012-03-27,2014-03-21,1,0.0,none,False
@@ -3617,6 +3637,9 @@ cik,ticker,name,fiscal_year,logical_input,originally_reported,latest_reported,or
 63908,MCD,McDonald's,2017,depreciation,1227500000,1227500000,2018-02-23,2020-02-26,1,0.0,none,False
 63908,MCD,McDonald's,2018,depreciation,1302900000,1302900000,2019-02-22,2021-02-23,1,0.0,none,False
 63908,MCD,McDonald's,2019,depreciation,1392200000,1392200000,2020-02-26,2022-02-24,1,0.0,none,False
+63908,MCD,McDonald's,2009,depreciation,1216200000,1216200000,2010-02-26,2012-02-24,1,0.0,none,False
+63908,MCD,McDonald's,2010,depreciation,1276200000,1276200000,2011-02-25,2013-02-25,1,0.0,none,False
+63908,MCD,McDonald's,2011,depreciation,1415000000,1415000000,2012-02-24,2014-02-24,1,0.0,none,False
 63908,MCD,McDonald's,2009,cfo,5751000000,5751000000,2010-02-26,2012-02-24,1,0.0,none,False
 63908,MCD,McDonald's,2010,cfo,6341600000,6341600000,2011-02-25,2013-02-25,1,0.0,none,False
 63908,MCD,McDonald's,2011,cfo,7150100000,7150100000,2012-02-24,2014-02-24,1,0.0,none,False
@@ -4823,6 +4846,7 @@ cik,ticker,name,fiscal_year,logical_input,originally_reported,latest_reported,or
 66740,MMM,3M,2023,depreciation,1987000000,1987000000,2024-02-07,2026-02-03,1,0.0,none,False
 66740,MMM,3M,2024,depreciation,1363000000,1363000000,2025-02-05,2026-02-03,1,0.0,none,False
 66740,MMM,3M,2025,depreciation,1308000000,1308000000,2026-02-03,2026-02-03,1,0.0,none,False
+66740,MMM,3M,2009,depreciation,1157000000,1157000000,2010-02-16,2010-02-16,1,0.0,none,False
 66740,MMM,3M,2009,cfo,4941000000,4941000000,2010-02-16,2011-02-16,1,0.0,none,False
 66740,MMM,3M,2010,cfo,5174000000,5174000000,2011-02-16,2011-02-16,1,0.0,none,False
 66740,MMM,3M,2017,cfo,6240000000,6240000000,2018-02-08,2020-02-06,1,0.0,none,False

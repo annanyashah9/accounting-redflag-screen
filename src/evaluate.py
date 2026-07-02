@@ -20,14 +20,20 @@ def surface_check(screen: pd.DataFrame) -> pd.DataFrame:
     """Per known-problem case: did the screen flag it, in which years, and when was the
     earliest flag knowable (point-in-time)? Qualitative -- NOT precision/recall."""
     kc = screen[screen["is_known_case"]].copy()
+    # Best (most-informative) status per case, so a MISS reads honestly: flagged > watch >
+    # clear (assessed, looked clean) > insufficient_data (couldn't assess).
+    rank = {"flagged": 0, "watch": 1, "clear": 2, "insufficient_data": 3}
     rows = []
     for ticker, g in kc.groupby("ticker"):
         flagged = g[g["screen_flagged"]]
         any_flag = g[g["red_flags"] >= 1]
+        best_status = min(g.get("screen_status", pd.Series(["insufficient_data"])),
+                          key=lambda s: rank.get(s, 3), default="insufficient_data")
         rows.append({
             "ticker": ticker,
             "name": g["name"].iloc[0],
             "years_scored": int(g["fiscal_year"].nunique()),
+            "status": best_status,
             f"flagged_years(>={SCREEN_MIN_FLAGS})": ", ".join(
                 map(str, sorted(flagged["fiscal_year"]))) or "-",
             "earliest_flag_knowable": (flagged["combined_available_as_of"].min()
@@ -99,15 +105,17 @@ the README. The screen is evaluated **as a screen** -- *"does it surface the com
 should?"* -- **not** as a return or earnings-miss predictor.
 
 ### Combining, point-in-time
-Four independent binary red flags, each on its **own pre-published / Phase-set threshold**
+Seven independent binary red flags, each on its **own pre-published / statutory threshold**
 (nothing re-tuned here): weak Piotroski F-Score (<= {2}), Beneish M-Score manipulation flag
-(> -1.78), a YoY rise in hedging language, and a YoY drop in forward-looking language.
-`red_flags` is their equal-weighted count (0-4); a company-year is **flagged when >= {SCREEN_MIN_FLAGS}
-independent signals agree** (corroboration, because Beneish alone has a high false-positive
-rate). Each flagged row carries a `reasons` drill-down naming exactly which metric and which
-tone shift fired. The combined `available_as_of` is the **latest** of the constituent signals'
-dates -- here identical, since the tone text comes from the same 10-K as the accounting data --
-so merging adds **no lookahead**.
+(> -1.78), high accruals (Sloan), aggressive asset growth (Cooper-Gulen-Schill), a YoY rise in
+hedging language, a YoY drop in forward-looking language, and a **late filing** (10-K past the
+SEC's 90-day statutory deadline, or an NT 10-K late-notice). The accruals/asset-growth flags
+are *atomic* -- they need only a few widely-available inputs, so they keep working when the
+composite F/M scores can't be computed. `red_flags` is their equal-weighted count (0-7); a
+company-year is **flagged when >= {SCREEN_MIN_FLAGS} independent signals agree** (corroboration,
+because Beneish alone has a high false-positive rate). Each flagged row carries a `reasons`
+drill-down naming exactly which signal fired. The combined `available_as_of` is the **latest**
+of the constituents' dates, so merging adds **no lookahead**.
 
 ### Does it surface the right companies?
 Of **{n_known}** seeded known-problem cases, the screen raised a corroborated (>= {SCREEN_MIN_FLAGS})
@@ -118,11 +126,13 @@ plausible, point-in-time-honest dates (e.g. before the problem became public). P
 {table}
 
 **This is a partial, honest result -- and that is the point.** The rule was specified on
-principle, not tuned; a rule tuned to these few cases would light up all of them. It misses
-several known cases, and the misses are informative: BHC/GE frequently have **no M-Score**
-(missing gross-margin XBRL inputs, Phase 1), and NKLA/SUNE/CLDN are **delisted with short
-histories**, so they have few YoY tone deltas to trip. The misses trace directly to the data
-limitations below.
+principle, not tuned; a rule tuned to these few cases would light up all of them. The `status`
+column above (and in `screen.csv`) keeps the misses honest -- **flagged** / **watch** (one
+uncorroborated flag) / **clear** (assessed, looks clean) / **insufficient_data** (scores could
+not be computed). A miss reads as `watch` or `insufficient_data`, **never `clear`**: GE's
+unclassified balance sheet leaves it `insufficient_data` (unevaluable, *not* a clean bill of
+health), Nikola's fraud wasn't in the financials, and Celadon trips one flag but has no second
+signal to corroborate. The misses trace directly to the data limitations below.
 
 ### Limitations free data cannot remove (named directly)
 1. **Survivorship bias.** The controls are companies still listed today; delisted/bankrupt

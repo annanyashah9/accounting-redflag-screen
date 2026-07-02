@@ -10,9 +10,11 @@ from config import SCREEN_MIN_FLAGS
 from screen import build_screen
 
 
-def _acct(fy, fscore, mscore, mflag, aao="2021-02-15", pend="2020-12-31"):
+def _acct(fy, fscore, mscore, mflag, aao="2021-02-15", pend="2020-12-31",
+          accruals=np.nan, asset_growth=np.nan):
     return {"cik": 1, "ticker": "T", "name": "Co", "is_known_case": True,
             "fiscal_year": fy, "fscore": fscore, "mscore": mscore, "mscore_flag": mflag,
+            "accruals": accruals, "asset_growth": asset_growth,
             "fiscal_period_end": pend, "available_as_of": aao}
 
 
@@ -69,6 +71,59 @@ def test_reasons_names_fired_signals_only():
     assert "M-Score=-1.20" in s["reasons"]
     assert "hedging" in s["reasons"]
     assert "fwd-looking" not in s["reasons"]     # fls_drop did not fire
+
+
+def test_late_filing_flag_corroborates_via_frame():
+    late = pd.DataFrame([{"cik": 1, "fiscal_period_end": "2020-12-31",
+                          "late_filing": True, "late_reason": "10-K filed 120d after period-end"}])
+    s = build_screen(
+        pd.DataFrame([_acct(2020, 1, -3.0, False)]),   # weak F only (1 flag)
+        pd.DataFrame([_tone(2020, False, False)]),
+        late,
+    ).iloc[0]
+    assert s["flag_late_filing"]
+    assert s["red_flags"] == 2 and s["screen_flagged"]   # weak F + late filing = corroborated
+    assert "120d" in s["reasons"]
+
+
+def test_no_late_filing_frame_defaults_false():
+    s = build_screen(pd.DataFrame([_acct(2020, 1, -3.0, False)]),
+                     pd.DataFrame([_tone(2020, False, False)])).iloc[0]
+    assert s["flag_late_filing"] is False or s["flag_late_filing"] == False  # noqa: E712
+    assert s["red_flags"] == 1
+
+
+def test_asset_growth_flag_fires_and_corroborates():
+    # +50% asset growth (> 0.30) + weak F-Score = 2 independent flags -> flagged.
+    s = _build([_acct(2020, 1, -3.0, False, asset_growth=0.50)],
+               [_tone(2020, False, False)]).iloc[0]
+    assert s["flag_asset_growth"]
+    assert s["red_flags"] == 2 and s["screen_flagged"]
+    assert "asset growth" in s["reasons"]
+
+
+def test_accruals_flag_threshold():
+    hi = _build([_acct(2020, 5, -3.0, False, accruals=0.20)],
+                [_tone(2020, False, False)]).iloc[0]
+    lo = _build([_acct(2020, 5, -3.0, False, accruals=0.05)],
+                [_tone(2020, False, False)]).iloc[0]
+    assert hi["flag_accruals"] and not lo["flag_accruals"]
+
+
+def test_screen_status_tiers():
+    def status(acct_row, tone_row):
+        return _build([acct_row], [tone_row]).iloc[0]["screen_status"]
+
+    # flagged: >=2 corroborating flags
+    assert status(_acct(2020, 1, -1.0, True), _tone(2020, False, False)) == "flagged"
+    # watch: exactly one flag
+    assert status(_acct(2020, 1, -3.0, False), _tone(2020, False, False)) == "watch"
+    # clear: scores computed, nothing tripped
+    assert status(_acct(2020, 7, -3.0, False), _tone(2020, False, False)) == "clear"
+    # insufficient_data: no computable score AND no flag -> not "clear"
+    import numpy as np
+    assert status(_acct(2020, np.nan, np.nan, False), _tone(2020, False, False)) \
+        == "insufficient_data"
 
 
 def test_nan_scores_do_not_flag():

@@ -214,13 +214,29 @@ def _missing_inputs(d: pd.DataFrame, inputs: list[str],
     )
 
 
+def atomic_red_flags(wide: pd.DataFrame) -> pd.DataFrame:
+    """Atomic accounting red flags that need only a few widely-available inputs, so they keep
+    working when the composite F/M scores can't be computed:
+      accruals     = (net_income - cfo) / total_assets      (Sloan 1996 earnings quality)
+      asset_growth = YoY change in total_assets             (Cooper-Gulen-Schill 2008)
+    asset_growth uses the prior year via the same consecutive-year merge as the scores, so a
+    gap yields NaN rather than a spurious multi-year growth rate."""
+    d = _with_lags(wide)
+    out = d[_KEYS].copy()
+    out["accruals"] = _safe_div(d["net_income"] - d["cfo"], d["total_assets"])
+    out["asset_growth"] = _safe_div(d["total_assets"] - d["total_assets_p1"],
+                                    d["total_assets_p1"])
+    return out
+
+
 def score_all(wide: pd.DataFrame) -> pd.DataFrame:
     """Run both scores and return one tidy company x fiscal-year table."""
     if wide.empty:
         return pd.DataFrame()
     f = piotroski_fscore(wide)
     m = beneish_mscore(wide).drop(columns=_KEYS)
-    scores = pd.concat([f, m], axis=1)
+    a = atomic_red_flags(wide).drop(columns=_KEYS)
+    scores = pd.concat([f, m, a], axis=1)
 
     # Carry the Phase-2 point-in-time anchor through if present.
     meta_cols = [c for c in ("filing_date", "source_form") if c in wide.columns]

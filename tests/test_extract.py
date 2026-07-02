@@ -100,6 +100,28 @@ def test_missing_concept_is_absent_not_fabricated():
     assert "revenue" not in set(long["logical_input"])  # no revenue tag -> simply absent
 
 
+def test_appended_fallback_fills_gap_without_overriding():
+    # Derivation recovery: a lowest-priority appended tag (DepreciationAndAmortization) must
+    # only FILL a gap, never override a higher-priority tag already present -> no regression.
+    both = _facts({
+        ("us-gaap", "DepreciationDepletionAndAmortization", "USD"):
+            [_fact(50, "2020-12-31", 2020, "2021-02-10", "a1", start="2020-01-01")],
+        ("us-gaap", "DepreciationAndAmortization", "USD"):
+            [_fact(99, "2020-12-31", 2020, "2021-02-10", "a1", start="2020-01-01")],
+    })
+    dep = extract_annual_facts(both, COMPANY, cik=1)
+    dep = dep[dep.logical_input == "depreciation"].iloc[0]
+    assert dep["tag_used"] == "DepreciationDepletionAndAmortization" and dep["value"] == 50
+
+    only_fallback = _facts({
+        ("us-gaap", "DepreciationAndAmortization", "USD"):
+            [_fact(99, "2020-12-31", 2020, "2021-02-10", "a1", start="2020-01-01")],
+    })
+    dep2 = extract_annual_facts(only_fallback, COMPANY, cik=1)
+    dep2 = dep2[dep2.logical_input == "depreciation"].iloc[0]
+    assert dep2["tag_used"] == "DepreciationAndAmortization" and dep2["value"] == 99
+
+
 def test_build_fundamentals_filing_date_is_latest_input():
     facts = _facts({
         ("us-gaap", "Assets", "USD"): [_fact(1000, "2020-12-31", 2020, "2021-02-10", "a1")],

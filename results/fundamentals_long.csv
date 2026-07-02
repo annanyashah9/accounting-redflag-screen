@@ -352,6 +352,12 @@ cik,ticker,name,is_known_case,logical_input,tag_used,taxonomy,unit,fiscal_year,p
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,receivables,AccountsReceivableNetCurrent,us-gaap,USD,2023,,2023-12-31,563000000.0,2024-02-13,0001364479-24-000006,10-K
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,receivables,AccountsReceivableNetCurrent,us-gaap,USD,2024,,2024-12-31,589000000.0,2025-02-13,0001364479-25-000007,10-K
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,receivables,AccountsReceivableNetCurrent,us-gaap,USD,2025,,2025-12-31,769000000.0,2026-02-17,0001364479-26-000050,10-K
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,receivables,AccountsReceivableNet,us-gaap,USD,2010,,2010-12-31,1356553000.0,2011-02-25,0001047469-11-001397,10-K
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,receivables,AccountsReceivableNet,us-gaap,USD,2011,,2011-12-31,1616382000.0,2012-02-27,0001047469-12-001623,10-K
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,receivables,AccountsReceivableNet,us-gaap,USD,2012,,2012-12-31,1886596000.0,2013-03-04,0001445305-13-000446,10-K
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,receivables,AccountsReceivableNet,us-gaap,USD,2013,,2013-12-31,1512600000.0,2014-03-19,0001364479-14-000006,10-K
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,receivables,AccountsReceivableNet,us-gaap,USD,2014,,2014-12-31,1597000000.0,2015-07-16,0001364479-15-000013,10-K
+1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,receivables,AccountsReceivableNet,us-gaap,USD,2015,,2015-12-31,2074000000.0,2016-02-29,0001364479-16-000045,10-K
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,ppe_net,PropertyPlantAndEquipmentNet,us-gaap,USD,2010,,2010-12-31,1163569000.0,2011-02-25,0001047469-11-001397,10-K
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,ppe_net,PropertyPlantAndEquipmentNet,us-gaap,USD,2011,,2011-12-31,1251854000.0,2012-02-27,0001047469-12-001623,10-K
 1364479,HTZ,Hertz Global Holdings (pre-2016-split entity),True,ppe_net,PropertyPlantAndEquipmentNet,us-gaap,USD,2012,,2012-12-31,1436386000.0,2013-03-04,0001445305-13-000446,10-K
@@ -488,6 +494,14 @@ cik,ticker,name,is_known_case,logical_input,tag_used,taxonomy,unit,fiscal_year,p
 1336917,UAA,Under Armour,True,depreciation,Depreciation,us-gaap,USD,2023,2022-04-01,2023-03-31,135700000.0,2023-05-24,0001336917-23-000021,10-K
 1336917,UAA,Under Armour,True,depreciation,Depreciation,us-gaap,USD,2024,2023-04-01,2024-03-31,136600000.0,2024-05-29,0001336917-24-000073,10-K
 1336917,UAA,Under Armour,True,depreciation,Depreciation,us-gaap,USD,2025,2024-04-01,2025-03-31,134300000.0,2025-05-22,0001336917-25-000078,10-K
+1336917,UAA,Under Armour,True,depreciation,DepreciationAndAmortization,us-gaap,USD,2010,2010-01-01,2010-12-31,31321000.0,2011-02-24,0001193125-11-044799,10-K
+1336917,UAA,Under Armour,True,depreciation,DepreciationAndAmortization,us-gaap,USD,2011,2011-01-01,2011-12-31,36301000.0,2012-02-27,0001193125-12-078826,10-K
+1336917,UAA,Under Armour,True,depreciation,DepreciationAndAmortization,us-gaap,USD,2012,2012-01-01,2012-12-31,43082000.0,2013-02-25,0001336917-13-000011,10-K
+1336917,UAA,Under Armour,True,depreciation,DepreciationAndAmortization,us-gaap,USD,2013,2013-01-01,2013-12-31,50549000.0,2014-02-21,0001336917-14-000008,10-K
+1336917,UAA,Under Armour,True,depreciation,DepreciationAndAmortization,us-gaap,USD,2014,2014-01-01,2014-12-31,72093000.0,2015-02-20,0001336917-15-000006,10-K
+1336917,UAA,Under Armour,True,depreciation,DepreciationAndAmortization,us-gaap,USD,2015,2015-01-01,2015-12-31,100940000.0,2016-02-22,0001336917-16-000064,10-K
+1336917,UAA,Under Armour,True,depreciation,DepreciationAndAmortization,us-gaap,USD,2016,2016-01-01,2016-12-31,144770000.0,2017-02-23,0001336917-17-000017,10-K
+1336917,UAA,Under Armour,True,depreciation,DepreciationAndAmortization,us-gaap,USD,2017,2017-01-01,2017-12-31,173747000.0,2018-02-28,0001336917-18-000009,10-K
 1336917,UAA,Under Armour,True,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2010,2010-01-01,2010-12-31,50114000.0,2011-02-24,0001193125-11-044799,10-K
 1336917,UAA,Under Armour,True,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2011,2011-01-01,2011-12-31,15218000.0,2012-02-27,0001193125-12-078826,10-K
 1336917,UAA,Under Armour,True,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2012,2012-01-01,2012-12-31,199761000.0,2013-02-25,0001336917-13-000011,10-K
@@ -1531,6 +1545,8 @@ cik,ticker,name,is_known_case,logical_input,tag_used,taxonomy,unit,fiscal_year,p
 945436,SUNE,SunEdison,True,depreciation,Depreciation,us-gaap,USD,2012,2012-01-01,2012-12-31,200600000.0,2013-03-01,0000945436-13-000020,10-K
 945436,SUNE,SunEdison,True,depreciation,Depreciation,us-gaap,USD,2013,2013-01-01,2013-12-31,206200000.0,2014-03-06,0000945436-14-000023,10-K
 945436,SUNE,SunEdison,True,depreciation,Depreciation,us-gaap,USD,2014,2014-01-01,2014-12-31,262200000.0,2015-03-02,0000945436-15-000049,10-K
+945436,SUNE,SunEdison,True,depreciation,DepreciationAndAmortization,us-gaap,USD,2009,2009-01-01,2009-12-31,124000000.0,2010-03-01,0001193125-10-044592,10-K
+945436,SUNE,SunEdison,True,depreciation,DepreciationAndAmortization,us-gaap,USD,2010,2010-01-01,2010-12-31,164800000.0,2011-02-22,0001193125-11-042346,10-K
 945436,SUNE,SunEdison,True,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2009,2009-01-01,2009-12-31,33000000.0,2010-03-01,0001193125-10-044592,10-K
 945436,SUNE,SunEdison,True,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2010,2010-01-01,2010-12-31,347600000.0,2011-02-22,0001193125-11-042346,10-K
 945436,SUNE,SunEdison,True,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2011,2011-01-01,2011-12-31,-15300000.0,2012-02-29,0000945436-12-000008,10-K
@@ -2477,6 +2493,7 @@ cik,ticker,name,is_known_case,logical_input,tag_used,taxonomy,unit,fiscal_year,p
 80424,PG,Procter & Gamble,False,depreciation,DepreciationDepletionAndAmortization,us-gaap,USD,2023,2022-07-01,2023-06-30,2714000000.0,2023-08-04,0000080424-23-000073,10-K
 80424,PG,Procter & Gamble,False,depreciation,DepreciationDepletionAndAmortization,us-gaap,USD,2024,2023-07-01,2024-06-30,2896000000.0,2024-08-05,0000080424-24-000083,10-K
 80424,PG,Procter & Gamble,False,depreciation,DepreciationDepletionAndAmortization,us-gaap,USD,2025,2024-07-01,2025-06-30,2847000000.0,2025-08-04,0000080424-25-000076,10-K
+80424,PG,Procter & Gamble,False,depreciation,DepreciationAndAmortization,us-gaap,USD,2010,2009-07-01,2010-06-30,3108000000.0,2010-08-13,0001193125-10-188769,10-K
 80424,PG,Procter & Gamble,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2010,2009-07-01,2010-06-30,16072000000.0,2010-08-13,0001193125-10-188769,10-K
 80424,PG,Procter & Gamble,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2011,2010-07-01,2011-06-30,13231000000.0,2011-08-10,0000080424-11-000014,10-K
 80424,PG,Procter & Gamble,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2012,2011-07-01,2012-06-30,13284000000.0,2012-08-08,0000080424-12-000063,10-K
@@ -3209,6 +3226,9 @@ cik,ticker,name,is_known_case,logical_input,tag_used,taxonomy,unit,fiscal_year,p
 104169,WMT,Walmart,False,depreciation,DepreciationAmortizationAndAccretionNet,us-gaap,USD,2024,2023-02-01,2024-01-31,11853000000.0,2024-03-15,0000104169-24-000056,10-K
 104169,WMT,Walmart,False,depreciation,DepreciationAmortizationAndAccretionNet,us-gaap,USD,2025,2024-02-01,2025-01-31,12973000000.0,2025-03-14,0000104169-25-000021,10-K
 104169,WMT,Walmart,False,depreciation,DepreciationAmortizationAndAccretionNet,us-gaap,USD,2026,2025-02-01,2026-01-31,14203000000.0,2026-03-13,0000104169-26-000055,10-K
+104169,WMT,Walmart,False,depreciation,DepreciationAndAmortization,us-gaap,USD,2009,2009-02-01,2010-01-31,7157000000.0,2010-03-30,0001193125-10-071652,10-K
+104169,WMT,Walmart,False,depreciation,DepreciationAndAmortization,us-gaap,USD,2010,2010-02-01,2011-01-31,7641000000.0,2011-03-30,0001193125-11-083157,10-K
+104169,WMT,Walmart,False,depreciation,DepreciationAndAmortization,us-gaap,USD,2011,2011-02-01,2012-01-31,8130000000.0,2012-03-27,0001193125-12-134679,10-K
 104169,WMT,Walmart,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2009,2009-02-01,2010-01-31,26249000000.0,2010-03-30,0001193125-10-071652,10-K
 104169,WMT,Walmart,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2010,2010-02-01,2011-01-31,23643000000.0,2011-03-30,0001193125-11-083157,10-K
 104169,WMT,Walmart,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2011,2011-02-01,2012-01-31,24255000000.0,2012-03-27,0001193125-12-134679,10-K
@@ -3887,6 +3907,9 @@ cik,ticker,name,is_known_case,logical_input,tag_used,taxonomy,unit,fiscal_year,p
 63908,MCD,McDonald's,False,depreciation,Depreciation,us-gaap,USD,2017,2017-01-01,2017-12-31,1227500000.0,2018-02-23,0000063908-18-000010,10-K
 63908,MCD,McDonald's,False,depreciation,Depreciation,us-gaap,USD,2018,2018-01-01,2018-12-31,1302900000.0,2019-02-22,0000063908-19-000010,10-K
 63908,MCD,McDonald's,False,depreciation,Depreciation,us-gaap,USD,2019,2019-01-01,2019-12-31,1392200000.0,2020-02-26,0000063908-20-000022,10-K
+63908,MCD,McDonald's,False,depreciation,DepreciationAndAmortization,us-gaap,USD,2009,2009-01-01,2009-12-31,1216200000.0,2010-02-26,0001193125-10-042025,10-K
+63908,MCD,McDonald's,False,depreciation,DepreciationAndAmortization,us-gaap,USD,2010,2010-01-01,2010-12-31,1276200000.0,2011-02-25,0001193125-11-046701,10-K
+63908,MCD,McDonald's,False,depreciation,DepreciationAndAmortization,us-gaap,USD,2011,2011-01-01,2011-12-31,1415000000.0,2012-02-24,0001193125-12-077317,10-K
 63908,MCD,McDonald's,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2009,2009-01-01,2009-12-31,5751000000.0,2010-02-26,0001193125-10-042025,10-K
 63908,MCD,McDonald's,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2010,2010-01-01,2010-12-31,6341600000.0,2011-02-25,0001193125-11-046701,10-K
 63908,MCD,McDonald's,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2011,2011-01-01,2011-12-31,7150100000.0,2012-02-24,0001193125-12-077317,10-K
@@ -5182,6 +5205,7 @@ cik,ticker,name,is_known_case,logical_input,tag_used,taxonomy,unit,fiscal_year,p
 66740,MMM,3M,False,depreciation,DepreciationDepletionAndAmortization,us-gaap,USD,2023,2023-01-01,2023-12-31,1987000000.0,2024-02-07,0000066740-24-000016,10-K
 66740,MMM,3M,False,depreciation,DepreciationDepletionAndAmortization,us-gaap,USD,2024,2024-01-01,2024-12-31,1363000000.0,2025-02-05,0000066740-25-000006,10-K
 66740,MMM,3M,False,depreciation,DepreciationDepletionAndAmortization,us-gaap,USD,2025,2025-01-01,2025-12-31,1308000000.0,2026-02-03,0000066740-26-000014,10-K
+66740,MMM,3M,False,depreciation,DepreciationAndAmortization,us-gaap,USD,2009,2009-01-01,2009-12-31,1157000000.0,2010-02-16,0001104659-10-007295,10-K
 66740,MMM,3M,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2009,2009-01-01,2009-12-31,4941000000.0,2010-02-16,0001104659-10-007295,10-K
 66740,MMM,3M,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2010,2010-01-01,2010-12-31,5174000000.0,2011-02-16,0001104659-11-007845,10-K
 66740,MMM,3M,False,cfo,NetCashProvidedByUsedInOperatingActivities,us-gaap,USD,2017,2017-01-01,2017-12-31,6240000000.0,2018-02-08,0001558370-18-000535,10-K

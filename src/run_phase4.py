@@ -18,7 +18,9 @@ from pathlib import Path
 
 import pandas as pd
 
+from edgar import get_submissions
 from evaluate import build_evaluation_markdown, make_heatmap, surface_check
+from filing_behavior import late_filing_flags
 from screen import build_screen
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -52,6 +54,21 @@ def print_summary(screen: pd.DataFrame, surface: pd.DataFrame) -> None:
           + ", ".join(f"{k}:{v}" for k, v in
                       screen['red_flags'].value_counts().sort_index().items()))
 
+    # Integrity check on the late-filing signal: is it discriminating (known >> control)?
+    if "flag_late_filing" in screen.columns:
+        kc, ctrl = screen[screen.is_known_case], screen[~screen.is_known_case]
+        print(f"late-filing flag rate: known cases {kc['flag_late_filing'].mean():.1%} "
+              f"vs controls {ctrl['flag_late_filing'].mean():.1%} | "
+              f"control screen-flag rate {ctrl['screen_flagged'].mean():.1%}")
+
+    if "screen_status" in screen.columns:
+        order = ["flagged", "watch", "clear", "insufficient_data"]
+        counts = screen["screen_status"].value_counts()
+        print("\nscreen_status (so 'not flagged' isn't misread as 'clean'): "
+              + ", ".join(f"{k}:{int(counts.get(k, 0))}" for k in order))
+        print("  -> a company is only 'clear' if we could actually compute its scores; "
+              "GE etc. read 'insufficient_data', not 'clear'.")
+
     print("\nDoes it surface the seeded known accounting-problem cases? (point-in-time)")
     print(surface.to_string(index=False))
 
@@ -63,9 +80,20 @@ def print_summary(screen: pd.DataFrame, surface: pd.DataFrame) -> None:
                                   ascending=[False, True])[cols].to_string(index=False))
 
 
+def _load_late_filing(scores_pit: pd.DataFrame) -> pd.DataFrame:
+    """Late-filing flags per fiscal period from cached submissions (no re-fetch)."""
+    frames = []
+    for cik in sorted(scores_pit["cik"].unique()):
+        subs = get_submissions(int(cik))
+        if subs is not None:
+            frames.append(late_filing_flags(subs, int(cik)))
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
 def main() -> None:
     scores_pit, tone_signals = _load_inputs()
-    screen = build_screen(scores_pit, tone_signals)
+    late_filing = _load_late_filing(scores_pit)
+    screen = build_screen(scores_pit, tone_signals, late_filing)
 
     # --- point-in-time integrity check: flagged rows are dated after their period-end ---
     flagged = screen[screen["screen_flagged"]]

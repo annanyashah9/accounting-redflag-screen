@@ -7,7 +7,7 @@ import pandas as pd
 import pytest
 
 from config import BENEISH_COEF
-from scores import beneish_mscore, piotroski_fscore, score_all
+from scores import atomic_red_flags, beneish_mscore, piotroski_fscore, score_all
 
 KEYS = dict(cik=1, ticker="T", name="TestCo", is_known_case=False)
 
@@ -104,6 +104,16 @@ def test_beneish_mscore_equals_coefficient_combination(wide):
                 + c["TATA"]*r["TATA"] + c["LVGI"]*r["LVGI"])
     assert r["mscore"] == pytest.approx(expected, rel=1e-9)
     assert bool(r["mscore_flag"]) == (r["mscore"] > -1.78)
+
+
+def test_atomic_red_flags_accruals_and_asset_growth(wide):
+    a = atomic_red_flags(wide).set_index("fiscal_year")
+    # accruals FY2020 = (NI - CFO) / assets = (150 - 200) / 1200
+    assert a.loc[2020, "accruals"] == pytest.approx((150 - 200) / 1200, rel=1e-6)
+    # asset growth FY2020 = (1200 - 1100) / 1100
+    assert a.loc[2020, "asset_growth"] == pytest.approx((1200 - 1100) / 1100, rel=1e-6)
+    # first year has no prior -> asset growth undefined, not a fabricated number
+    assert np.isnan(a.loc[2018, "asset_growth"])
 
 
 def test_score_all_carries_keys_and_both_scores(wide):

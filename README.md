@@ -63,12 +63,17 @@ across companies with different disclosure styles. Because the tone for year Y c
 same 10-K as year Y's financials, it inherits the identical `available_as_of` — the tone side
 introduces no new lookahead.
 
-**Phase 4 — combine and evaluate** (`screen.py`, `evaluate.py`)
-Merges everything into one screen. Four independent binary flags — weak F-Score (≤2), Beneish
-manipulation flag (M > −1.78), a YoY hedging rise, a YoY forward-looking drop — each on its
-*own* pre-published threshold, equal-weighted into a 0–4 count. A company-year is flagged when
-**≥2 independent signals corroborate** (Beneish alone has a high false-positive rate). The
-combined `available_as_of` is the latest of the constituents. Nothing is fit or tuned.
+**Phase 4 — combine and evaluate** (`screen.py`, `evaluate.py`, `filing_behavior.py`)
+Merges everything into one screen. Seven independent binary flags — weak F-Score (≤2), Beneish
+manipulation flag (M > −1.78), high accruals (Sloan), aggressive asset growth
+(Cooper-Gulen-Schill), a YoY hedging rise, a YoY forward-looking drop, and a **late filing**
+(10-K past the SEC's 90-day statutory deadline, or an NT 10-K late-notice) — each on its *own*
+pre-published/statutory threshold, equal-weighted into a 0–7 count. A company-year is flagged
+when **≥2 independent signals corroborate** (Beneish alone has a high false-positive rate). The
+flags span *different dimensions* — earnings quality, balance-sheet growth, tone,
+governance/timeliness — so corroboration is real, and the atomic accruals/asset-growth flags
+keep working even when the composite scores can't be computed. The combined `available_as_of` is
+the latest of the constituents. Nothing is fit or tuned.
 
 ---
 
@@ -94,16 +99,63 @@ lookahead is removed and residual contamination is surfaced, not buried.
 ## Does it surface the right companies?
 
 Qualitative, by design — no precision/recall on a return model. Of the 10 seeded problem
-cases, the screen raises a corroborated (≥2) flag for **four** — MiMedx, Kraft Heinz, Mattel,
-and Hertz — each at a plausible, point-in-time-honest date (Hertz FY2015 knowable 2016-02-29,
-Mattel FY2017 knowable 2018-02-27, before its 2019 restatement disclosure). The control flag
-rate is ~0.9%.
+cases, the screen raises a corroborated (≥2) flag for **seven** — MiMedx, Kraft Heinz, Mattel,
+Hertz, Under Armour, **Bausch/Valeant**, and **SunEdison** — each at a plausible, point-in-time-
+honest date (Hertz FY2015 knowable 2016-02-29, Mattel FY2017 knowable 2018-02-27 before its 2019
+restatement disclosure, Bausch FY2015 via an 86% asset-growth jump from the Salix acquisition
+plus a late filing). The control flag rate stays **~0.9%** — the added signals raised known-case
+detection without adding a single control false positive.
 
-**It misses the other six, and that's the honest result.** A rule tuned to these few cases
-would light up all ten; this one wasn't, so it doesn't. The misses are also informative:
-Valeant/Bausch and GE frequently have no M-Score at all (missing gross-margin XBRL inputs),
-and Nikola, SunEdison, and Celadon are delisted with short histories, leaving too few
-year-over-year tone deltas to trip. The gaps trace straight back to the data limitations.
+**It misses three — GE, Nikola, and Celadon — and those misses are the honest boundary of what
+free data can do:**
+
+- **GE** — moved to an *unclassified balance sheet* (2016–19), so it reports no current
+  assets/liabilities; the composite ratios can't be computed, it was *shrinking* (so the
+  asset-growth flag doesn't fire), and it filed on time. Genuinely hard.
+- **Nikola** — the fraud was fabricated *product claims*, not in the financials at all; a
+  financials screen is the wrong instrument.
+- **Celadon** — the asset-growth flag fires (+70%), but its composite scores are uncomputable
+  (trucking has no gross-profit/SG&A line) and it has no second in-window signal to corroborate.
+
+A rule *tuned* to these cases would light up all ten; this one wasn't, so it doesn't — and the
+three it can't reach are limits of the data and the instrument, not thresholds waiting to be
+loosened.
+
+**"Not flagged" is not the same as "clean."** Every row of `screen.csv` carries a
+`screen_status` so the table can't mislead: **flagged** (≥2 corroborating red flags) · **watch**
+(one uncorroborated flag) · **clear** (scores computed, nothing tripped — a genuine "looks
+clean") · **insufficient_data** (the scores couldn't be computed at all). GE reads
+`insufficient_data`, *not* `clear` — the screen is explicit that it couldn't evaluate it, rather
+than quietly implying a clean bill of health.
+
+### Data recovery (derivation, no imputation)
+
+Under Armour's flag came from a deliberate *derivation* pass: some inputs are missing only
+because a firm tagged them under a name we didn't capture. Recovering those **real reported
+values** (e.g. Under Armour's depreciation lives under `DepreciationAndAmortization`) — by
+appending verified alternate XBRL tags at lowest priority, so an existing value is never
+overridden — recovered 13 previously-uncomputable M-Scores and moved the hit rate from 4/10 to
+5/10. Crucially this is *not* statistical imputation: no value is invented. Where a number was
+genuinely never reported (GE's current assets, Nikola's revenue, Celadon's gross margin), it
+stays missing and flagged — guessing it would defeat the entire point of the screen.
+
+### The strongest single signal: late filing
+
+The most discriminating individual flag isn't a financial ratio — it's **whether the company
+filed on time**. Using the SEC's own 90-day statutory deadline (and NT 10-K late-notices),
+**7 of the 10 known problem cases filed a 10-K late in some year, versus 0 of the 20 controls**
+— a clean separation with zero false positives, all point-in-time dated. It's a genuinely
+*independent* dimension (governance/timeliness, not accounting), which is why it belongs in a
+corroboration rule.
+
+It did **not** move the headline ≥2 count (still 5/10): the missed late-filers (Bausch,
+Nikola, SunEdison) get the late flag but lack a *second* computable signal to corroborate — the
+same missing-data limitation — and I deliberately did not weaken the ≥2 rule to force them
+over. What it did do is *strengthen* the cases already caught (Kraft Heinz FY2018 now
+corroborates across three independent signals, including a 10-K filed 160 days late) and add a
+standalone diagnostic that's arguably the screen's sharpest. (One caveat the signal exposes:
+SunEdison's FY2015 was *never filed at all* — the ultimate red flag — yet a screen keyed on
+filed 10-Ks can't see a filing that doesn't exist.)
 
 ### Limitations free data can't remove
 

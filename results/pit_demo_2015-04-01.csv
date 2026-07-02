@@ -1,4 +1,5 @@
 ticker,name,is_known_case,fiscal_year,fscore,mscore,mscore_flag,fiscal_period_end,available_as_of,available_as_of_form,knowable_next_day,visible_as_of,n_restated_inputs,restated_inputs
+MMM,3M,False,2010,,-2.5066290811748337,False,2010-12-31,2011-02-16,10-K,True,True,0,
 INTC,Intel,False,2010,,-2.7285729603254625,False,2010-12-25,2011-02-18,10-K,False,True,0,
 PEP,PepsiCo,False,2010,,-2.319008721735471,False,2010-12-25,2011-02-18,10-K,True,True,0,
 MAT,Mattel,True,2010,,-1.9887011120240978,False,2010-12-31,2011-02-24,10-K,False,True,0,
@@ -7,8 +8,10 @@ KO,Coca-Cola,False,2010,,-2.1436595898661936,False,2010-12-31,2011-02-28,10-K,Fa
 MRK,Merck,False,2010,,-2.644453772670587,False,2010-12-31,2011-02-28,10-K,False,True,1,sga
 PFE,Pfizer,False,2010,,-2.462659068416239,False,2010-12-31,2011-02-28,10-K,False,True,7,"cogs,current_assets,depreciation,ppe_net,receivables,revenue,sga"
 HD,Home Depot,False,2010,,-2.4601243757896025,False,2011-01-30,2011-03-24,10-K,False,True,0,
+WMT,Walmart,False,2010,,-2.5142280213898323,False,2011-01-31,2011-03-30,10-K,True,True,0,
 NKE,Nike,False,2011,,-2.223383874429488,False,2011-05-31,2011-07-22,10-K,False,True,3,"gross_profit,revenue,sga"
 MSFT,Microsoft,False,2011,,-2.545987601792633,False,2011-06-30,2011-07-28,10-K,False,True,0,
+PG,Procter & Gamble,False,2011,,-2.346414698758471,False,2011-06-30,2011-08-10,10-K,False,True,5,"cfo,cogs,income_continuing,revenue,sga"
 COST,Costco,False,2011,,-2.793711925948746,False,2011-08-28,2011-10-14,10-K,True,True,0,
 MMM,3M,False,2011,7.0,-2.501902944859815,False,2011-12-31,2012-02-16,10-K,False,True,0,
 CAT,Caterpillar,False,2011,5.0,-2.2448622521977044,False,2011-12-31,2012-02-21,10-K,False,True,4,"cfo,current_assets,current_liabilities,receivables"
@@ -17,11 +20,12 @@ JNJ,Johnson & Johnson,False,2011,5.0,-2.608949048648762,False,2012-01-01,2012-02
 KO,Coca-Cola,False,2011,5.0,-2.4187146586218087,False,2011-12-31,2012-02-23,10-K,False,True,0,
 MAT,Mattel,True,2011,4.0,-2.338638023771449,False,2011-12-31,2012-02-23,10-K,False,True,0,
 PEP,PepsiCo,False,2011,5.0,-2.520471195584441,False,2011-12-31,2012-02-27,10-K,True,True,0,
+UAA,Under Armour,True,2011,,-1.657550343638104,True,2011-12-31,2012-02-27,10-K,False,True,0,
 MRK,Merck,False,2011,8.0,-2.7176897081753366,False,2011-12-31,2012-02-28,10-K,False,True,0,
 PFE,Pfizer,False,2011,8.0,-2.839153361088836,False,2011-12-31,2012-02-28,10-K,True,True,9,"cogs,current_assets,current_liabilities,depreciation,income_continuing,ppe_net,receivables,revenue,sga"
 SUNE,SunEdison,True,2011,1.0,,,2011-12-31,2012-02-29,10-K,False,True,1,sga
 HD,Home Depot,False,2011,8.0,-2.7001163389571943,False,2012-01-29,2012-03-22,10-K,False,True,0,
-WMT,Walmart,False,2011,5.0,,,2012-01-31,2012-03-27,10-K,True,True,0,
+WMT,Walmart,False,2011,5.0,-2.480179493986105,False,2012-01-31,2012-03-27,10-K,True,True,0,
 NKE,Nike,False,2012,7.0,-2.2754003726929204,False,2012-05-31,2012-07-24,10-K,False,True,10,"cfo,cogs,current_assets,gross_profit,income_continuing,net_income,ppe_net,receivables,revenue,sga"
 MSFT,Microsoft,False,2012,5.0,-2.9944419858511333,False,2012-06-30,2012-07-26,10-K,False,True,0,
 PG,Procter & Gamble,False,2012,6.0,-2.654259876428019,False,2012-06-30,2012-08-08,10-K,False,True,4,"cogs,income_continuing,revenue,sga"
@@ -33,14 +37,14 @@ INTC,Intel,False,2012,5.0,-2.940193503085205,False,2012-12-29,2013-02-19,10-K,Fa
 PEP,PepsiCo,False,2012,5.0,-2.612084999783843,False,2012-12-29,2013-02-21,10-K,True,True,0,
 JNJ,Johnson & Johnson,False,2012,5.0,-2.4672105891789147,False,2012-12-30,2013-02-22,10-K,True,True,0,
 TXN,Texas Instruments,False,2012,7.0,-3.124117086457775,False,2012-12-31,2013-02-22,10-K,False,True,0,
-UAA,Under Armour,True,2012,4.0,,,2012-12-31,2013-02-25,10-K,False,True,0,
+UAA,Under Armour,True,2012,4.0,-2.552821107379924,False,2012-12-31,2013-02-25,10-K,False,True,0,
 MAT,Mattel,True,2012,6.0,,,2012-12-31,2013-02-26,10-K,False,True,0,
 KO,Coca-Cola,False,2012,5.0,-2.6199413719657607,False,2012-12-31,2013-02-27,10-K,False,True,0,
 BHC,Bausch Health (fka Valeant),True,2012,6.0,-1.9959486382896021,False,2012-12-31,2013-02-28,10-K,True,True,4,"cogs,income_continuing,net_income,revenue"
 MRK,Merck,False,2012,5.0,-2.737937895665723,False,2012-12-31,2013-02-28,10-K,True,True,0,
 PFE,Pfizer,False,2012,8.0,-2.7549046206272787,False,2012-12-31,2013-02-28,10-K,True,True,10,"cfo,cogs,current_assets,current_liabilities,depreciation,income_continuing,ppe_net,receivables,revenue,sga"
 SUNE,SunEdison,True,2012,1.0,-2.575163548491121,False,2012-12-31,2013-03-01,10-K,False,True,2,"sga,total_assets"
-WMT,Walmart,False,2012,6.0,,,2013-01-31,2013-03-26,10-K,True,True,0,
+WMT,Walmart,False,2012,6.0,-2.560192963903444,False,2013-01-31,2013-03-26,10-K,True,True,0,
 HD,Home Depot,False,2012,8.0,-2.6401383440394177,False,2013-02-03,2013-03-28,10-K,False,True,0,
 NKE,Nike,False,2013,7.0,-2.7974619132600655,False,2013-05-31,2013-07-23,10-K,False,True,3,"current_liabilities,income_continuing,net_income"
 MSFT,Microsoft,False,2013,6.0,-2.623451670960268,False,2013-06-30,2013-07-30,10-K,False,True,2,"cogs,sga"
@@ -52,7 +56,7 @@ INTC,Intel,False,2013,5.0,-3.0409832843518516,False,2013-12-28,2014-02-14,10-K,F
 PEP,PepsiCo,False,2013,7.0,-2.694658778967377,False,2013-12-28,2014-02-14,10-K,True,True,0,
 CAT,Caterpillar,False,2013,5.0,-2.959944568830653,False,2013-12-31,2014-02-18,10-K,False,True,0,
 JNJ,Johnson & Johnson,False,2013,6.0,-2.6161917756382556,False,2013-12-29,2014-02-21,10-K,False,True,0,
-UAA,Under Armour,True,2013,4.0,,,2013-12-31,2014-02-21,10-K,False,True,0,
+UAA,Under Armour,True,2013,4.0,-1.680703674434179,True,2013-12-31,2014-02-21,10-K,False,True,0,
 TXN,Texas Instruments,False,2013,7.0,-2.8266603386048406,False,2013-12-31,2014-02-24,10-K,False,True,0,
 MAT,Mattel,True,2013,5.0,,,2013-12-31,2014-02-26,10-K,False,True,0,
 KO,Coca-Cola,False,2013,6.0,-2.570573877712381,False,2013-12-31,2014-02-27,10-K,False,True,0,
@@ -73,7 +77,7 @@ MMM,3M,False,2014,8.0,-2.80209993029472,False,2014-12-31,2015-02-12,10-K,True,Tr
 PEP,PepsiCo,False,2014,5.0,-2.8422667112382585,False,2014-12-27,2015-02-12,10-K,True,True,3,"cogs,gross_profit,sga"
 INTC,Intel,False,2014,7.0,-2.7302054464795598,False,2014-12-27,2015-02-13,10-K,False,True,0,
 CAT,Caterpillar,False,2014,7.0,-2.8399195509677884,False,2014-12-31,2015-02-17,10-K,True,True,4,"cogs,income_continuing,net_income,sga"
-UAA,Under Armour,True,2014,6.0,,,2014-12-31,2015-02-20,10-K,True,True,0,
+UAA,Under Armour,True,2014,6.0,-2.330058050868854,False,2014-12-31,2015-02-20,10-K,True,True,0,
 JNJ,Johnson & Johnson,False,2014,6.0,-2.6450102638842425,False,2014-12-28,2015-02-24,10-K,False,True,3,"cfo,current_assets,total_assets"
 TXN,Texas Instruments,False,2014,8.0,-2.7618906590639667,False,2014-12-31,2015-02-24,10-K,True,True,3,"cfo,current_assets,total_assets"
 BHC,Bausch Health (fka Valeant),True,2014,6.0,-2.558152906314328,False,2014-12-31,2015-02-25,10-K,True,True,7,"cfo,cogs,current_assets,current_liabilities,income_continuing,net_income,revenue"
@@ -93,7 +97,7 @@ MMM,3M,False,2015,7.0,-2.7375453363629,False,2015-12-31,2016-02-11,10-K,True,Fal
 PEP,PepsiCo,False,2015,7.0,-2.9284698900845982,False,2015-12-26,2016-02-11,10-K,True,False,4,"cfo,cogs,gross_profit,sga"
 INTC,Intel,False,2015,5.0,-2.834571926343019,False,2015-12-26,2016-02-12,10-K,False,False,2,"current_assets,total_assets"
 CAT,Caterpillar,False,2015,6.0,-2.8728960621020136,False,2015-12-31,2016-02-16,10-K,False,False,5,"cogs,current_assets,income_continuing,net_income,sga"
-UAA,Under Armour,True,2015,1.0,,,2015-12-31,2016-02-22,10-K,True,False,3,"cfo,long_term_debt,revenue"
+UAA,Under Armour,True,2015,1.0,-0.8963552718652698,True,2015-12-31,2016-02-22,10-K,True,False,3,"cfo,long_term_debt,revenue"
 JNJ,Johnson & Johnson,False,2015,5.0,-2.627045079356095,False,2016-01-03,2016-02-24,10-K,True,False,1,cfo
 TXN,Texas Instruments,False,2015,8.0,-2.9027072774545415,False,2015-12-31,2016-02-24,10-K,False,False,2,"cfo,sga"
 KO,Coca-Cola,False,2015,6.0,-2.7885979804117276,False,2015-12-31,2016-02-25,10-K,False,False,0,
@@ -116,6 +120,7 @@ INTC,Intel,False,2016,5.0,-2.835897969952408,False,2016-12-31,2017-02-17,10-K,Fa
 MAT,Mattel,True,2016,4.0,,,2016-12-31,2017-02-23,10-K,False,False,2,"income_continuing,net_income"
 PFE,Pfizer,False,2016,6.0,-2.674111006671918,False,2016-12-31,2017-02-23,10-K,True,False,1,cfo
 TXN,Texas Instruments,False,2016,9.0,-2.6810384223200954,False,2016-12-31,2017-02-23,10-K,False,False,1,sga
+UAA,Under Armour,True,2016,,-2.3562643256060576,False,2016-12-31,2017-02-23,10-K,True,False,2,"cfo,revenue"
 KO,Coca-Cola,False,2016,6.0,-2.640222184538714,False,2016-12-31,2017-02-24,10-K,False,False,1,sga
 JNJ,Johnson & Johnson,False,2016,8.0,-2.5097646997351193,False,2017-01-01,2017-02-27,10-K,True,False,1,sga
 MRK,Merck,False,2016,6.0,-2.7557384711497703,False,2016-12-31,2017-02-28,10-K,True,False,2,"depreciation,sga"
@@ -141,6 +146,7 @@ MAT,Mattel,True,2017,1.0,,,2017-12-31,2018-02-27,10-K,False,False,0,
 MRK,Merck,False,2017,7.0,-2.7191317497060274,False,2017-12-31,2018-02-27,10-K,True,False,2,"depreciation,sga"
 BHC,Bausch Health (fka Valeant),True,2017,5.0,-2.5904697982979057,False,2017-12-31,2018-02-28,10-K,True,False,0,
 HTZ,Hertz Global Holdings (pre-2016-split entity),True,2017,8.0,,,2017-12-31,2018-02-28,10-K,False,False,1,cfo
+UAA,Under Armour,True,2017,,-2.968352266485639,False,2017-12-31,2018-02-28,10-K,False,False,3,"cfo,gross_profit,sga"
 HD,Home Depot,False,2017,6.0,-2.8808641977805256,False,2018-01-28,2018-03-22,10-K,False,False,0,
 WMT,Walmart,False,2018,6.0,-2.9133446511831607,False,2018-01-31,2018-03-30,10-K,False,False,0,
 NKE,Nike,False,2018,5.0,-3.1915838941567554,False,2018-05-31,2018-07-25,10-K,True,False,0,
@@ -157,6 +163,7 @@ JNJ,Johnson & Johnson,False,2018,7.0,-2.6800097043828117,False,2018-12-30,2019-0
 KO,Coca-Cola,False,2018,7.0,-2.5101815771776117,False,2018-12-31,2019-02-21,10-K,True,False,9,"cfo,cogs,current_assets,current_liabilities,gross_profit,ppe_net,receivables,revenue,sga"
 MAT,Mattel,True,2018,3.0,,,2018-12-31,2019-02-22,10-K,False,False,0,
 TXN,Texas Instruments,False,2018,6.0,-3.0336441283258972,False,2018-12-31,2019-02-22,10-K,False,False,0,
+UAA,Under Armour,True,2018,,-3.1855174625215996,False,2018-12-31,2019-02-25,10-K,True,False,0,
 MRK,Merck,False,2018,7.0,-2.7808033543849398,False,2018-12-31,2019-02-27,10-K,True,False,0,
 PFE,Pfizer,False,2018,7.0,-2.7143520284615708,False,2018-12-31,2019-02-28,10-K,False,False,4,"cogs,income_continuing,revenue,sga"
 HD,Home Depot,False,2018,7.0,-2.772293973786131,False,2019-02-03,2019-03-28,10-K,False,False,1,cfo

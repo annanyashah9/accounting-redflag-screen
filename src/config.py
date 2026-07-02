@@ -151,8 +151,11 @@ CONCEPT_MAP = {
         "kind": "duration", "taxonomy": "us-gaap",
         # NOTE: cash-flow D&A includes amortization; IS depreciation is often buried in
         # COGS and not separately tagged. This is a known Beneish-from-XBRL imprecision.
+        # `DepreciationAndAmortization` is appended LAST (derivation recovery): it only fills
+        # years where none of the higher-priority tags exist (e.g. Under Armour 2015-2018),
+        # so it never changes an already-computed value -- it just recovers ~22 company-years.
         "tags": ["DepreciationDepletionAndAmortization", "Depreciation",
-                 "DepreciationAmortizationAndAccretionNet"],
+                 "DepreciationAmortizationAndAccretionNet", "DepreciationAndAmortization"],
     },
     # ---- Cash flow (flow) ----
     "cfo": {
@@ -178,8 +181,10 @@ CONCEPT_MAP = {
     "receivables": {
         "kind": "instant", "taxonomy": "us-gaap",
         # Some filers (e.g. PepsiCo) tag the combined accounts/notes/loans line.
+        # `AccountsReceivableNet` (no "Current" suffix; some filers report total net trade
+        # receivables unsplit) is appended last as a derivation-recovery fallback.
         "tags": ["AccountsReceivableNetCurrent", "ReceivablesNetCurrent",
-                 "AccountsNotesAndLoansReceivableNetCurrent"],
+                 "AccountsNotesAndLoansReceivableNetCurrent", "AccountsReceivableNet"],
     },
     "ppe_net": {
         "kind": "instant", "taxonomy": "us-gaap",
@@ -240,6 +245,21 @@ PIOTROSKI_WEAK = 2
 # cases light up; each underlying flag uses its own pre-published / Phase-set threshold.
 # ---------------------------------------------------------------------------
 SCREEN_MIN_FLAGS = 2
+
+# Late-filing red flag (an independent, leading, governance-side signal): a 10-K filed more
+# than this many days after fiscal period-end is "late". 90 days is the SEC's most-lenient
+# statutory 10-K deadline (non-accelerated filers; accelerated filers owe 60-75) -- an
+# objective legal threshold, NOT a value tuned to the known cases.
+LATE_FILING_DAYS = 90
+
+# Atomic accounting red flags -- each needs only 2-3 widely-available inputs, so they keep
+# working when the composite F/M scores can't be computed. Thresholds are round, literature-
+# standard cutoffs (NOT tuned to the known cases; each flag's control false-positive rate is
+# reported at run time as the honesty check).
+#   accruals     = (net_income - operating_cash_flow) / total_assets   (Sloan 1996)
+#   asset_growth = (assets_t - assets_{t-1}) / assets_{t-1}            (Cooper-Gulen-Schill 2008)
+ACCRUALS_THRESHOLD = 0.10       # earnings running well ahead of cash -> low quality
+ASSET_GROWTH_THRESHOLD = 0.30   # aggressive YoY balance-sheet expansion (e.g. acquisition binge)
 
 # ---------------------------------------------------------------------------
 # Design-scope limitations -- stated honestly in output headers. These scores were

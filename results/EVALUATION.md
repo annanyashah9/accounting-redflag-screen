@@ -5,42 +5,46 @@ the README. The screen is evaluated **as a screen** -- *"does it surface the com
 should?"* -- **not** as a return or earnings-miss predictor.
 
 ### Combining, point-in-time
-Four independent binary red flags, each on its **own pre-published / Phase-set threshold**
+Seven independent binary red flags, each on its **own pre-published / statutory threshold**
 (nothing re-tuned here): weak Piotroski F-Score (<= 2), Beneish M-Score manipulation flag
-(> -1.78), a YoY rise in hedging language, and a YoY drop in forward-looking language.
-`red_flags` is their equal-weighted count (0-4); a company-year is **flagged when >= 2
-independent signals agree** (corroboration, because Beneish alone has a high false-positive
-rate). Each flagged row carries a `reasons` drill-down naming exactly which metric and which
-tone shift fired. The combined `available_as_of` is the **latest** of the constituent signals'
-dates -- here identical, since the tone text comes from the same 10-K as the accounting data --
-so merging adds **no lookahead**.
+(> -1.78), high accruals (Sloan), aggressive asset growth (Cooper-Gulen-Schill), a YoY rise in
+hedging language, a YoY drop in forward-looking language, and a **late filing** (10-K past the
+SEC's 90-day statutory deadline, or an NT 10-K late-notice). The accruals/asset-growth flags
+are *atomic* -- they need only a few widely-available inputs, so they keep working when the
+composite F/M scores can't be computed. `red_flags` is their equal-weighted count (0-7); a
+company-year is **flagged when >= 2 independent signals agree** (corroboration,
+because Beneish alone has a high false-positive rate). Each flagged row carries a `reasons`
+drill-down naming exactly which signal fired. The combined `available_as_of` is the **latest**
+of the constituents' dates, so merging adds **no lookahead**.
 
 ### Does it surface the right companies?
 Of **10** seeded known-problem cases, the screen raised a corroborated (>= 2)
-flag for **4**, and at least one red flag for **6** -- versus a
-control flag rate of **0.9%** (known-case rate 4.0%). The flags appear at
+flag for **7**, and at least one red flag for **9** -- versus a
+control flag rate of **0.9%** (known-case rate 10.5%). The flags appear at
 plausible, point-in-time-honest dates (e.g. before the problem became public). Per case:
 
 ```
-ticker                                          name  years_scored flagged_years(>=2) earliest_flag_knowable  years_with_any_flag
-  MDXG                                  MiMedx Group            14               2023             2024-02-28                    4
-   KHC                                   Kraft Heinz            11         2018, 2024             2019-06-07                    5
-   MAT                                        Mattel            17               2017             2018-02-27                    7
-   HTZ Hertz Global Holdings (pre-2016-split entity)            16               2015             2016-02-29                    2
-   BHC                   Bausch Health (fka Valeant)            16                  -                      -                    0
-  CLDN                                 Celadon Group             5                  -                      -                    0
-    GE                              General Electric            16                  -                      -                    0
-  NKLA                                        Nikola             7                  -                      -                    0
-  SUNE                                     SunEdison             6                  -                      -                    2
-   UAA                                  Under Armour            16                  -                      -                    4
+ticker                                          name  years_scored            status flagged_years(>=2) earliest_flag_knowable  years_with_any_flag
+   KHC                                   Kraft Heinz            11           flagged         2018, 2024             2019-06-07                    5
+   MAT                                        Mattel            17           flagged               2017             2018-02-27                    8
+   BHC                   Bausch Health (fka Valeant)            16           flagged               2015             2016-04-29                    3
+  MDXG                                  MiMedx Group            14           flagged   2013, 2019, 2023             2014-03-04                    7
+  SUNE                                     SunEdison             6           flagged               2013             2014-03-06                    4
+   HTZ Hertz Global Holdings (pre-2016-split entity)            16           flagged         2012, 2015             2013-03-04                    8
+   UAA                                  Under Armour            16           flagged   2011, 2013, 2015             2012-02-27                    7
+  CLDN                                 Celadon Group             5             watch                  -                      -                    1
+    GE                              General Electric            16 insufficient_data                  -                      -                    0
+  NKLA                                        Nikola             7             watch                  -                      -                    2
 ```
 
 **This is a partial, honest result -- and that is the point.** The rule was specified on
-principle, not tuned; a rule tuned to these few cases would light up all of them. It misses
-several known cases, and the misses are informative: BHC/GE frequently have **no M-Score**
-(missing gross-margin XBRL inputs, Phase 1), and NKLA/SUNE/CLDN are **delisted with short
-histories**, so they have few YoY tone deltas to trip. The misses trace directly to the data
-limitations below.
+principle, not tuned; a rule tuned to these few cases would light up all of them. The `status`
+column above (and in `screen.csv`) keeps the misses honest -- **flagged** / **watch** (one
+uncorroborated flag) / **clear** (assessed, looks clean) / **insufficient_data** (scores could
+not be computed). A miss reads as `watch` or `insufficient_data`, **never `clear`**: GE's
+unclassified balance sheet leaves it `insufficient_data` (unevaluable, *not* a clean bill of
+health), Nikola's fraud wasn't in the financials, and Celadon trips one flag but has no second
+signal to corroborate. The misses trace directly to the data limitations below.
 
 ### Limitations free data cannot remove (named directly)
 1. **Survivorship bias.** The controls are companies still listed today; delisted/bankrupt
