@@ -147,10 +147,20 @@ def main(since: int | None = None, use_llm: bool = False) -> None:
     if use_llm:
         _run_llm_pass(tone, records)  # supplementary; see tone_llm
 
-    tone.to_csv(RESULTS_DIR / "tone_signals.csv", index=False)
+    # A --since run is a partial panel; write to suffixed files so it can never clobber the
+    # canonical full-panel tone_signals.csv that Phase 4 consumes. (Note: the subset's
+    # earliest year also loses its YoY deltas, since its prior year isn't in the panel.)
+    suffix = f"_since_{since}" if since is not None else ""
+    signals_name = f"tone_signals{suffix}.csv"
+    examples_name = f"tone_examples{suffix}.csv"
+
+    tone.to_csv(RESULTS_DIR / signals_name, index=False)
     examples = print_summary(tone, categories)
-    examples.to_csv(RESULTS_DIR / "tone_examples.csv", index=False)
-    print("\nWrote: results/tone_signals.csv, results/tone_examples.csv")
+    examples.to_csv(RESULTS_DIR / examples_name, index=False)
+    if suffix:
+        print(f"\n(Partial --since run: wrote suffixed files, left the full-panel "
+              f"tone_signals.csv untouched.)")
+    print(f"\nWrote: results/{signals_name}, results/{examples_name}")
 
 
 def _run_llm_pass(tone: pd.DataFrame, records: list[dict]) -> None:
