@@ -187,13 +187,14 @@ src/
   config.py        universe, User-Agent, XBRL tag map, score constants, tone lexicon config
   edgar.py         EDGAR fetch + on-disk caching (companyfacts, submissions, ticker map)
   extract.py       XBRL tag-mapping -> tidy annual facts (the Phase 1 landmine)
-  scores.py        Piotroski F-Score + Beneish M-Score (vectorized)
+  scores.py        Piotroski F-Score + Beneish M-Score + atomic flags (accruals, asset growth)
   pit.py           available_as_of stamping, restatement detection, point_in_time_view
   lexicon.py       Loughran-McDonald dictionary loader + tokenizer
   filings_text.py  10-K primary-doc fetch + MD&A (Item 7) extraction
   tone.py          LM tone signals + YoY deltas
   tone_llm.py      optional LLM nuance pass (off by default)
-  screen.py        combine accounting + tone into the flagged screen
+  filing_behavior.py  late-filing red flag (SEC deadline + NT 10-K) from submissions
+  screen.py        combine the 7 flags into the screen + screen_status tiers
   evaluate.py      surface check, heatmap figure, evaluation writeup
   run_phase{1..4}.py  one runnable entry point per phase
 tests/             hermetic pytest suite (no network)
@@ -218,12 +219,13 @@ against a fixed snapshot. Phase 4 reads the Phase 2/3 output CSVs, so run the ph
 ## Testing
 
 ```bash
-python -m pytest        # 53 hermetic tests, no network
+python -m pytest        # 65 hermetic tests, no network
 ```
 
-Tests cover the score math, the XBRL tag-mapping edge cases (fiscal-year labeling, tag
-priority, originally-reported selection), the point-in-time and restatement logic, the tone
-signals, and the combination rule.
+Tests cover the score math (incl. the atomic accruals/asset-growth flags), the XBRL
+tag-mapping edge cases (fiscal-year labeling, tag priority, originally-reported selection, and
+the no-override tag recovery), the point-in-time and restatement logic, the tone signals, the
+late-filing flag, and the combination rule with its `screen_status` tiers.
 
 ## Notes & attribution
 
